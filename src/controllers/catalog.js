@@ -1,5 +1,6 @@
 const { Router } = require("express");
-const { getAll, getById, getByAuthorId} = require("../services/volcano");
+const { getAll, getById, searchFor} = require("../services/volcano");
+
 
 const catalogRouter = Router();
 
@@ -23,5 +24,17 @@ catalogRouter.get('/catalog/:id', async(req, res) => {
     volcano.hasVoted = Boolean(volcano.voteList.find(v => v.toString() == req.user?._id));
     res.render('details', { volcano });
 });
+
+catalogRouter.get('/search', async (req, res) => {
+
+    let {name, typeVolcano} = req.query;
+    let volcanoes = [];
+    if(name || typeVolcano && typeVolcano != '---'){
+        volcanoes = await searchFor(name, typeVolcano);
+    }else{
+        volcanoes = await getAll();
+    }
+    res.render('search', { data: {name, typeVolcano} , volcanoes})
+})
 
 module.exports = { catalogRouter }

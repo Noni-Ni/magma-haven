@@ -59,7 +59,7 @@ async function getByAuthorId(authorId){
     return Volcano.find({ author: authorId}).lean();
 }
 
-//TODO add voting method
+
 
 async function addVote(volcanoId, userId){
     const record = await Volcano.findById(volcanoId);
@@ -82,6 +82,7 @@ async function addVote(volcanoId, userId){
 
 async function deleteById(id, userId){
     const record = await Volcano.findById(id);
+    
 
     if(!record){
         throw new ReferenceError('Record not found ' + id);
@@ -94,6 +95,19 @@ async function deleteById(id, userId){
     await Volcano.findByIdAndDelete(id);
 }
 
+async function searchFor(name, typeVolcano){
+    let query = {};
+
+    if(name){
+        query.name = new RegExp(name, 'i');
+    }
+    if(typeVolcano && typeVolcano != '---'){
+        query.typeVolcano = typeVolcano;
+    }
+
+    return Volcano.find(query).lean();
+}
+
 module.exports = {
     getAll,
     getById,
@@ -101,5 +115,6 @@ module.exports = {
     update,
     deleteById,
     addVote,
-    getByAuthorId
+    getByAuthorId,
+    searchFor
 }

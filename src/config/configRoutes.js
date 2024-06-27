@@ -10,7 +10,7 @@ function configRoutes(app){
      app.use(catalogRouter);
      app.use(userRouter);
      app.use(volcanoRouter);
-     //TODO register routers
+     
 
      app.get('*', (req, res) => {
           res.render('404');
